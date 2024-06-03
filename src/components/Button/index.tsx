@@ -12,7 +12,7 @@ export const Button = ({
   onClick,
   children,
   bgImageUrl,
-  bgImagePosition = "left",
+  bgImagePosition = "right",
 }: Props) => {
   return (
     <span className="py-2 px-2 bg-c-dark-green rounded-full">
