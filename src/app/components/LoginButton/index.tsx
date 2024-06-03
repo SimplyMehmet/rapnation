@@ -7,11 +7,7 @@ export const LoginButton = () => {
   };
 
   return (
-    <Button
-      onClick={loginToSpotify}
-      bgImagePosition="right"
-      bgImageUrl="/img/spotify.svg"
-    >
+    <Button onClick={loginToSpotify} bgImageUrl="/img/spotify.svg">
       <span>Click to login with spotify</span>
     </Button>
   );
