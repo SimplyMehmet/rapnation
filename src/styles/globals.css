@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --c-dark-green-rgb: 36, 130, 50;
+  --c-light-green-rgb: 43, 168, 74;
+  --c-black-rgb: 4, 15, 15;
+  --c-white-rgb: 255, 255, 255; 
+}
+
+body {
+  background-color: rgb(var(--c-black-rgb));
+  color: rgb(var(--c-white-rgb));
+}
