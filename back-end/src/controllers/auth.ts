@@ -2,7 +2,14 @@ import { randomBytes } from "crypto";
 import { Request, Response } from "express";
 import { config } from "../config/config";
 import { URLSearchParams } from "url";
-import axios, { AxiosError } from "axios";
+import {
+  authenticateSpotifyAccount,
+  refreshSpotifyAccessToken,
+} from "../services/auth";
+import { RefreshTokenRequest } from "./request/auth";
+import { SpotifyRedirectQueryParams } from "./params/auth";
+import { SpotifyTokenResponse } from "./response/auth";
+import { ErrorResponse } from "./response/global";
 
 export const login = (_req: Request, res: Response): void => {
   const scope = "user-read-email";
@@ -20,55 +27,51 @@ export const login = (_req: Request, res: Response): void => {
   );
 };
 
+export const refreshToken = async (
+  req: Request<
+    Record<string, string>,
+    Record<string, string>,
+    RefreshTokenRequest
+  >,
+  res: Response<SpotifyTokenResponse | ErrorResponse>
+): Promise<void> => {
+  const refreshToken = req.body.refreshToken ?? null;
+  if (!refreshToken) {
+    res.status(401).json({ error: "refresh token not found" });
+    return;
+  }
+
+  const result = await refreshSpotifyAccessToken(refreshToken);
+  if (typeof result === "string") {
+    res.status(500).json({ error: result });
+    return;
+  }
+
+  res.status(200).json(result);
+};
+
 export const spotifyRedirect = async (
   req: Request<
     Record<string, string>,
     Record<string, string>,
     Record<string, string>,
-    { code?: string; state?: string }
+    SpotifyRedirectQueryParams
   >,
   res: Response
 ): Promise<void> => {
-  // should all be present in service instead
   const code = req.query.code ?? null;
   const state = req.query.state ?? null;
 
-  if (state === null || code == null) {
-    // should redirect to front-end
-    res.redirect(
-      "/#" +
-        new URLSearchParams({
-          error: "state_mismatch",
-        }).toString()
-    );
-    res.status(401);
+  if (state === null || code === null) {
+    res.status(401).json({ error: "authentication failed" });
+    return;
+  }
+  const result = await authenticateSpotifyAccount(code);
+
+  if (typeof result === "string") {
+    res.status(500).json({ error: result });
     return;
   }
 
-  const body = {
-    code: code,
-    redirect_uri: config.spotify_authenticated_redirect_uri,
-    grant_type: "authorization_code",
-  };
-
-  try {
-    const spotifyRes = await axios.post(
-      "https://accounts.spotify.com/api/token",
-      body,
-      {
-        headers: {
-          "Content-type": "application/x-www-form-urlencoded",
-          Authorization:
-            "Basic " +
-            Buffer.from(
-              config.spotify_client_id + ":" + config.spotify_client_secret
-            ).toString("base64"),
-        },
-      }
-    );
-
-    res.json(spotifyRes.data);
-  } catch (error) {
-    res.status(500);
-  }
+  res.status(200).json(result);
 };
