@@ -57,7 +57,7 @@ export const spotifyRedirect = async (
     Record<string, string>,
     SpotifyRedirectQueryParams
   >,
-  res: Response
+  res: Response<SpotifyTokenResponse | ErrorResponse>
 ): Promise<void> => {
   const code = req.query.code ?? null;
   const state = req.query.state ?? null;

@@ -1,9 +1,8 @@
 "use client";
 import { RedirectType, redirect, useSearchParams } from "next/navigation";
 import useSWR from "swr";
-import { AuthenticationResponse } from "@/app/api/spotify/types";
+import { AuthenticationResponse } from "@/app/api/auth/spotify/types";
 import { fetcher } from "@/lib/fetcher";
-import { cookies } from "next/headers";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -14,21 +13,21 @@ export default function Page() {
     redirect("/login", RedirectType.replace);
   }
 
-  const { data, error, isLoading } = useSWR<AuthenticationResponse>(
-    "/api/spotify?" +
+  const { data, isLoading } = useSWR(
+    "/api/auth/spotify?" +
       new URLSearchParams({
         code: spotifyAuthCode,
         state: spotifyAuthState,
       }),
-    fetcher
+    fetcher<AuthenticationResponse>("GET")
   );
 
-  if (error) {
-    return <div>Errored: {JSON.stringify(error)}</div>;
+  if (!isLoading && data?.error) {
+    return <div>Errored: {data.error}</div>;
   }
 
-  if (!isLoading && data) {
-    redirect("/search");
+  if (!isLoading && data?.result) {
+    redirect("/dashboard/search");
   }
 
   return (

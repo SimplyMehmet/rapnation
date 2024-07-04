@@ -1,6 +1,9 @@
 import { config } from "@/config";
+import { fetcher } from "@/lib/fetcher";
 import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
+import { AuthenticationResponse } from "./types";
+import { CookieType } from "@/enums/cookie";
 
 export async function GET(req: NextRequest): Promise<Response> {
   const { nextUrl } = req;
@@ -15,7 +18,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     return Response.json({ error: "Params invalid" }, { status: 400 });
   }
 
-  const apiCall = await fetch(
+  const response = await fetcher<AuthenticationResponse>("GET")(
     config.apiURL +
       "auth/spotify/callback?" +
       new URLSearchParams({
@@ -24,20 +27,23 @@ export async function GET(req: NextRequest): Promise<Response> {
       })
   );
 
-  const data = await apiCall.json();
+  if (response.error || !response.result) {
+    return Response.json(response, { status: response.status });
+  }
 
-  const expiresAt = new Date().getTime() + data.expires_in * 0.8;
-  cookies().set("accessToken", data.access_token, {
+  const expiresAt = new Date().getTime() + response.result.expires_in * 800;
+  cookies().set(CookieType.AccessToken, response.result.access_token, {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
   });
-  cookies().set("refreshToken", data.refresh_token, {
+
+  cookies().set(CookieType.RefreshToken, response.result.refresh_token, {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
   });
-  
-  cookies().set("expiresAt", `${expiresAt}`);
-  return Response.json(data);
+
+  cookies().set(CookieType.ExpiresAt, `${expiresAt}`);
+  return Response.json(response);
 }

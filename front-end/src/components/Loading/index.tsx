@@ -1,3 +1,7 @@
 export const Loading = () => {
-  return <div>Loading...</div>;
+  return (
+    <div className="h-lvh flex items-center justify-center">
+      <span>Loading...</span>
+    </div>
+  );
 };
