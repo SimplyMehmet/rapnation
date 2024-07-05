@@ -1,7 +1,12 @@
-export const Loading = () => {
+import Image from "next/image";
+
+type Props = {
+  height?: number;
+  width?: number;
+};
+
+export const Loading = ({ height = 100, width = 100 }: Props) => {
   return (
-    <div className="h-lvh flex items-center justify-center">
-      <span>Loading...</span>
-    </div>
+    <Image src="/img/loading.svg" alt="loading" width={width} height={height} />
   );
 };

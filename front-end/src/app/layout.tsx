@@ -13,7 +13,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} ${rokkitt.variable}`}>
-        <Suspense fallback={<Loading />}>{children}</Suspense>
+        <Suspense
+          fallback={
+            <div className="h-lvh flex items-center justify-center">
+              <Loading />
+            </div>
+          }
+        >
+          {children}
+        </Suspense>
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import useSWRMutation from "swr/mutation";
 
 export const Header = () => {
-  const { trigger } = useSWRMutation("/api/test", fetcher("GET"));
+  const { trigger } = useSWRMutation("/api/auth", fetcher("DELETE"));
   const router = useRouter();
 
   const logout = async () => {
@@ -14,7 +14,7 @@ export const Header = () => {
 
   return (
     <div className="absolute top-0 left-0 right-0 flex justify-end p-4">
-      <span onClick={logout} className="cursor-pointer">
+      <span onClick={logout} className="cursor-pointer hover:text-c-dark-green">
         Logout
       </span>
     </div>

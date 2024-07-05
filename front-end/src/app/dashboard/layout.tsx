@@ -5,9 +5,9 @@ export default function Layout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   return (
-    <div className="relative">
+    <div className="relative h-lvh">
       <Header />
-      {children}
+      <div className="py-[56px] h-[100%]">{children}</div>
     </div>
   );
 }

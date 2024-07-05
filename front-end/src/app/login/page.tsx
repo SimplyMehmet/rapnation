@@ -7,7 +7,7 @@ export default function page() {
         <div className="mb-5">
           <h1>Log in to discover rappers you might like!</h1>
           <span className="font-rokkitt">
-            Works best with a premium account
+            Don&apos;t forget to add them to your favorite playlists
           </span>
         </div>
         <div>

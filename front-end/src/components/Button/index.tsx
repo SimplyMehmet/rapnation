@@ -15,7 +15,7 @@ export const Button = ({
   bgImagePosition = "right",
 }: Props) => {
   return (
-    <span className="py-2 px-2 bg-c-dark-green rounded-full">
+    <span className="py-2 px-2 bg-c-dark-green rounded-full inline-block transition-all active:scale-[.99] hover:scale-[1.04] cursor-pointer">
       <button
         className={`px-20 bg-contain bg-no-repeat`}
         style={{

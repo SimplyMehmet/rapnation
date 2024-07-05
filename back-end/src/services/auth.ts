@@ -1,5 +1,5 @@
 import { SpotifyTokenResponse } from "../controllers/response/auth";
-import { getAccessToken, refreshAccessToken } from "../repositories/spotify";
+import { getAccessToken, refreshAccessToken } from "../repositories/spotify/spotify";
 
 export const authenticateSpotifyAccount = async (
   code: string
