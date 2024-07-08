@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss";
 
 const config: Config = {
   content: [
@@ -14,16 +15,25 @@ const config: Config = {
       "c-white": "#ffffff",
     },
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-      },
       fontFamily: {
         rokkitt: "var(--rokkitt)",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    {
+      handler: ({ addUtilities }) => {
+        addUtilities({
+          ".no-scrollbar": {
+            "-ms-overflow-style": "none",
+            "scrollbar-width": "none",
+          },
+          ".no-scrollbar::-webkit-scrollbar": {
+            display: "none",
+          },
+        });
+      },
+    },
+  ],
 };
 export default config;

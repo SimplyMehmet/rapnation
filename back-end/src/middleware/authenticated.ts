@@ -7,6 +7,7 @@ export const authenticatedRoute = (
   next: NextFunction
 ) => {
   const accessToken = req.cookies[CookieType.AccessToken] as string | undefined;
+
   if (!accessToken) {
     res.status(401).json({ error: "No accessToken cookie found" });
     return;

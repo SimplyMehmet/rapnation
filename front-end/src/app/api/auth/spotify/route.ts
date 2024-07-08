@@ -28,22 +28,24 @@ export async function GET(req: NextRequest): Promise<Response> {
   );
 
   if (response.error || !response.result) {
-    return Response.json(response, { status: response.status });
+    return Response.json(
+      { error: response.error },
+      { status: response.status }
+    );
   }
 
   const expiresAt = new Date().getTime() + response.result.expires_in * 800;
+  const cookieExpires = 3600 * 24 * 30;
+
   cookies().set(CookieType.AccessToken, response.result.access_token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
+    maxAge: cookieExpires,
   });
-
   cookies().set(CookieType.RefreshToken, response.result.refresh_token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
+    maxAge: cookieExpires,
+  });
+  cookies().set(CookieType.ExpiresAt, `${expiresAt}`, {
+    maxAge: cookieExpires,
   });
 
-  cookies().set(CookieType.ExpiresAt, `${expiresAt}`);
-  return Response.json(response);
+  return Response.json(response.result, { status: response.status });
 }

@@ -27,6 +27,13 @@ const nextConfig = {
             destination: "/dashboard/search",
             permanent: false,
         }]
+    },
+    images: {
+        formats: ["image/webp"],
+        remotePatterns: [{
+            protocol: "https",
+            hostname: "i.scdn.co"
+        }]
     }
 };
 

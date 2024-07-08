@@ -114,7 +114,6 @@ export const searchArtists = async ({
     return spotifyRes.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.log(error.cause, error.message, error.response?.data);
       const errorDescription = (error as SpotifyError).response?.data
         .error_description;
 
